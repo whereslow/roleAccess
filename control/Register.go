@@ -1,9 +1,9 @@
 package control
 
 import (
-	"CasbinStudio/DAO"
-	"CasbinStudio/config"
-	"CasbinStudio/validate"
+	"ValidStudio/DAO"
+	"ValidStudio/config"
+	"ValidStudio/validate"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,6 +1,6 @@
 package validate
 
-import "CasbinStudio/config"
+import "ValidStudio/config"
 
 func ValidTeacher(token string) bool {
 	role := config.RDB.Get(token).Val()

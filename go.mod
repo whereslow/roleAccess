@@ -1,4 +1,4 @@
-module CasbinStudio
+module ValidStudio
 
 go 1.23.2
 

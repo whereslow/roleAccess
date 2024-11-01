@@ -1,7 +1,7 @@
 package test
 
 import (
-	"CasbinStudio/config"
+	"ValidStudio/config"
 	"testing"
 )
 

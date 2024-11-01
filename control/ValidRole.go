@@ -1,7 +1,7 @@
 package control
 
 import (
-	"CasbinStudio/validate"
+	"ValidStudio/validate"
 	"github.com/gin-gonic/gin"
 )
 

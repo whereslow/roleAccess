@@ -1,8 +1,8 @@
 package main
 
 import (
-	"CasbinStudio/config"
-	"CasbinStudio/control"
+	"ValidStudio/config"
+	"ValidStudio/control"
 	"github.com/gin-gonic/gin"
 )
 

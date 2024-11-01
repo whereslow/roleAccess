@@ -1,8 +1,8 @@
 package control
 
 import (
-	"CasbinStudio/DAO"
-	"CasbinStudio/config"
+	"ValidStudio/DAO"
+	"ValidStudio/config"
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
