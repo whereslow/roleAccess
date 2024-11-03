@@ -7,9 +7,12 @@ import (
 )
 
 func TestValidateAdmin(t *testing.T) {
-	config.InitRedis()
+	err := config.InitRedis()
+	if err != nil {
+		panic(err)
+	}
 	token := config.RDB.Get("lry").Val()
-	flag := validate.ValidAdmin(token)
+	flag := validate.Valid(token, "admin")
 	if !flag {
 		t.Error("Admin validation failed")
 	}

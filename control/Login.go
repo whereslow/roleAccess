@@ -23,7 +23,7 @@ func Login(c *gin.Context) {
 	// mysql 取值
 	role, isExist, err := DAO.AccessRole(username, password, config.DB)
 	if err != nil {
-		c.JSON(200, gin.H{"fail": "server error"})
+		c.JSON(200, gin.H{"fail": "username or password error"})
 		return
 	}
 	if !isExist {

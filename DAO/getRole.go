@@ -35,7 +35,7 @@ func AccessRole(username string, toValidPassword string, db *sqlx.DB) (string, b
 	err = bcrypt.CompareHashAndPassword([]byte(realPassword), []byte(toValidPassword))
 	if err != nil {
 		// 验证不通过
-		slog.Error(username + " " + toValidPassword + " not match")
+		slog.Info(username + " " + toValidPassword + " not match")
 		return "", true, err
 	} else {
 		// 验证通过
