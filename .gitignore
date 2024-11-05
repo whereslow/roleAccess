@@ -1,8 +1,9 @@
-*.sum
 *.exe
 .env
 /.env
 ./.env
 *.iml/
 *.iml
+.idea
 artifact/
+docker/

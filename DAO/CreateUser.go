@@ -15,10 +15,7 @@ func CreateUser(username string, password string, role string, db *sqlx.DB) bool
 	// 查询是否已存在
 	selectSql := "SELECT username FROM roletable WHERE username=?"
 	var selected string
-	err = db.Get(&selected, selectSql, username)
-	if err != nil {
-		slog.Error(err.Error())
-	}
+	_ = db.Get(&selected, selectSql, username)
 	if selected == "" {
 		insertSql := "INSERT INTO roletable(roletable.username,roletable.`password`,roletable.role)VALUES(?,?,?)"
 		db.MustExec(insertSql, username, string(hashPassword), role)

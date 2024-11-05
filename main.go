@@ -20,11 +20,11 @@ func main() {
 	}
 	err = config.InitMysql()
 	if err != nil {
-		panic(err)
+		log.Fatal("Mysql连接失败")
 	}
 	err = config.InitRedis()
 	if err != nil {
-		panic(err)
+		log.Fatal("Redis连接失败")
 	}
 
 	// 插入初始admin
