@@ -7,12 +7,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"log"
+	"os"
 )
 
 func main() {
-	err := godotenv.Load("./.env")
-	if err != nil {
-		log.Fatal("not found .env file")
+	var err error
+	if os.Args[1] != "deploy" {
+		err = godotenv.Load("./.env")
+		if err != nil {
+			log.Fatal("not found .env file")
+		}
 	}
 	err = config.InitMysql()
 	if err != nil {
@@ -25,7 +29,7 @@ func main() {
 
 	// 插入初始admin
 	DAO.CreateUser("whereslow", "whereslow", "admin", config.DB)
-
+	// ~
 	r := gin.Default()
 	sso := r.Group("/sso")
 	{
