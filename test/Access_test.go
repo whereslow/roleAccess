@@ -7,6 +7,8 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/google/uuid"
+	"github.com/joho/godotenv"
+	"log"
 	"log/slog"
 	"math/rand/v2"
 	"testing"
@@ -14,16 +16,26 @@ import (
 )
 
 func TestLogin(t *testing.T) {
-	// 我错了,不该不分离Service,以为东西少
-	config.InitMysql()
-	config.InitRedis()
+	// dotenv load
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	err = config.InitMysql()
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = config.InitRedis()
+	if err != nil {
+		log.Fatal(err)
+	}
 	username := "lry"
 	password := "www"
-	role, isExist, err := DAO.AccessRole(username, password, config.DB)
+	role, finish, err := DAO.AccessRole(username, password, config.DB)
 	if err != nil {
-		return
+		t.Fatal(err)
 	}
-	if !isExist {
+	if !finish {
 		return
 	}
 	// 验证是否登录,避免多token申请
@@ -37,12 +49,12 @@ func TestLogin(t *testing.T) {
 	hashId := sha256.Sum256([]byte(id.String()))
 	hashString := base64.URLEncoding.EncodeToString(hashId[:])
 	// redis存值
-	time := time.Duration(2*3600000000000 + rand.IntN(10)*3600000000000) // 2-10小时
-	_, err = config.RDB.Set(username, hashString, time).Result()         // 登录表,防止用户换取多token
+	saveTime := time.Duration(2*3600000000000 + rand.IntN(10)*3600000000000) // 2-10小时
+	_, err = config.RDB.Set(username, hashString, saveTime).Result()         // 登录表,防止用户换取多token
 	if err != nil {
 		slog.Error(err.Error())
 	}
-	result, err := config.RDB.Set(hashString, role, time).Result()
+	result, err := config.RDB.Set(hashString, role, saveTime).Result()
 	if err != nil {
 		slog.Error(err.Error())
 	}
@@ -52,15 +64,25 @@ func TestLogin(t *testing.T) {
 	// 返回token
 }
 func TestLoginOut(t *testing.T) {
-	config.InitMysql()
-	config.InitRedis()
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	err = config.InitMysql()
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = config.InitRedis()
+	if err != nil {
+		log.Fatal(err)
+	}
 	username := "lry"
 	password := "www"
-	_, isExist, err := DAO.AccessRole(username, password, config.DB)
+	_, finish, err := DAO.AccessRole(username, password, config.DB)
 	if err != nil {
 		return
 	}
-	if !isExist {
+	if !finish {
 		return
 	}
 	token := config.RDB.Get(username).String()

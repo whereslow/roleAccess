@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ValidRole 验证对应token的身份
 func ValidRole(c *gin.Context) {
 	var flag = false
 	role := c.PostForm("role")

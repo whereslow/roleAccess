@@ -6,6 +6,8 @@ import (
 	"log/slog"
 )
 
+// AccessRole 根据账号和密码取得对应角色
+// 返回值: (角色,函数调用是否成功,报错)
 func AccessRole(username string, toValidPassword string, db *sqlx.DB) (string, bool, error) {
 	sql := "SELECT role, password FROM roletable WHERE username = ?"
 	selectSql := "SELECT username FROM roletable WHERE username=?"
@@ -34,9 +36,9 @@ func AccessRole(username string, toValidPassword string, db *sqlx.DB) (string, b
 	// 验证密码
 	err = bcrypt.CompareHashAndPassword([]byte(realPassword), []byte(toValidPassword))
 	if err != nil {
-		// 验证不通过
+		// 账号和密码不对应
 		slog.Info(username + " " + toValidPassword + " not match")
-		return "", true, err
+		return "", false, nil
 	} else {
 		// 验证通过
 		return role, true, nil

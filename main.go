@@ -4,10 +4,16 @@ import (
 	"ValidStudio/config"
 	"ValidStudio/control"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	"log"
 )
 
 func main() {
-	err := config.InitMysql()
+	err := godotenv.Load("./.env")
+	if err != nil {
+		log.Fatal("not found .env file")
+	}
+	err = config.InitMysql()
 	if err != nil {
 		panic(err)
 	}
