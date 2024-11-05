@@ -1,6 +1,7 @@
 *.sum
 *.exe
 .env
+/.env
 *.iml/
 *.iml
 artifact/
