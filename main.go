@@ -12,7 +12,7 @@ import (
 
 func main() {
 	var err error
-	if os.Args[1] != "deploy" {
+	if len(os.Args) < 2 {
 		err = godotenv.Load("./.env")
 		if err != nil {
 			log.Fatal("not found .env file")
