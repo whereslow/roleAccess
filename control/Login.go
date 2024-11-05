@@ -15,8 +15,18 @@ import (
 
 // Login 登录,校验账号密码,返回临时token,并存储token和账户在redis,用于校验.如已经登录,则返回失败
 func Login(c *gin.Context) {
-	username := c.PostForm("username")
-	password := c.PostForm("password")
+
+	// request json解析及其参数绑定
+	var req struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	err := c.BindJSON(&req)
+	if err != nil {
+		c.JSON(200, gin.H{"fail": "request is not standardized"})
+	}
+	username := req.Username
+	password := req.Password
 	if username == "" || password == "" {
 		c.JSON(200, gin.H{"fail": "username or password is empty"})
 		return

@@ -7,9 +7,19 @@ import (
 
 // ValidRole 验证对应token的身份
 func ValidRole(c *gin.Context) {
+
+	// request json解析及其参数绑定
+	var req struct {
+		Role  string `json:"role"`
+		Token string `json:"token"`
+	}
+	err := c.BindJSON(&req)
+	if err != nil {
+		c.JSON(200, gin.H{"fail": "request is not standardized"})
+	}
 	var flag = false
-	role := c.PostForm("role")
-	token := c.PostForm("token")
+	role := req.Role
+	token := req.Token
 	flag = validate.Valid(token, role)
 
 	c.JSON(200, gin.H{"success": "valid role success", "auth": flag})
