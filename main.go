@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ValidStudio/DAO"
 	"ValidStudio/config"
 	"ValidStudio/control"
 	"github.com/gin-gonic/gin"
@@ -21,6 +22,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	// 插入初始admin
+	DAO.CreateUser("whereslow", "whereslow", "admin", config.DB)
+
 	r := gin.Default()
 	sso := r.Group("/sso")
 	{
@@ -28,6 +33,7 @@ func main() {
 		sso.POST("/login", control.Login)
 		sso.POST("/valid", control.ValidRole)
 		sso.POST("/logout", control.LogOut)
+		sso.DELETE("/delete", control.Delete)
 	}
 
 	err = r.Run("0.0.0.0:8000")
