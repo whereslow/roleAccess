@@ -2,6 +2,7 @@
 *.exe
 .env
 /.env
+./.env
 *.iml/
 *.iml
 artifact/
