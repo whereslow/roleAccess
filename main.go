@@ -13,9 +13,18 @@ import (
 func main() {
 	var err error
 	if len(os.Args) < 2 {
+		gin.SetMode(gin.DebugMode)
+		log.Println("you are on debug mode")
 		err = godotenv.Load("./.env")
 		if err != nil {
-			log.Fatal("not found .env file")
+			log.Fatal("could not found .env file")
+		}
+	} else {
+		if os.Args[1] != "deploy" {
+			log.Println("with arg deploy to enable release mode")
+			return
+		} else {
+			gin.SetMode(gin.ReleaseMode)
 		}
 	}
 	err = config.InitMysql()
