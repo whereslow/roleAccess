@@ -51,6 +51,7 @@ func main() {
 
 	err = r.Run("0.0.0.0:8000")
 	if err != nil {
+		log.Println("服务器启动失败")
 		panic(err)
 	}
 }
