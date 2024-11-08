@@ -15,13 +15,13 @@ func ValidRole(c *gin.Context) {
 	}
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.JSON(200, gin.H{"fail": "request is not standardized"})
+		c.JSON(200, gin.H{"flag": "fail", "detail": "request is not standardized", "auth": "NULL"})
 	}
 	var flag = false
 	role := req.Role
 	token := req.Token
 	flag = validate.Valid(token, role)
 
-	c.JSON(200, gin.H{"success": "valid role success", "auth": flag})
+	c.JSON(200, gin.H{"flag": "success", "detail": "valid role success", "auth": flag})
 	return
 }

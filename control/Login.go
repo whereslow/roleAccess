@@ -23,28 +23,28 @@ func Login(c *gin.Context) {
 	}
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.JSON(200, gin.H{"fail": "request is not standardized"})
+		c.JSON(200, gin.H{"flag": "fail", "detail": "request is not standardized", "token": "NULL"})
 	}
 	username := req.Username
 	password := req.Password
 	if username == "" || password == "" {
-		c.JSON(200, gin.H{"fail": "username or password is empty"})
+		c.JSON(200, gin.H{"flag": "fail", "detail": "username or password is empty", "token": "NULL"})
 		return
 	}
 	// mysql 取值
 	role, finish, err := DAO.AccessRole(username, password, config.DB)
 	if err != nil {
-		c.JSON(200, gin.H{"fail": "internal server error"})
+		c.JSON(200, gin.H{"flag": "fail", "detail": "internal server error", "token": "NULL"})
 		return
 	}
 	if !finish {
-		c.JSON(200, gin.H{"fail": "username or password error"})
+		c.JSON(200, gin.H{"flag": "fail", "detail": "username or password error", "token": "NULL"})
 		return
 	}
 	// redis取值,验证是否登录,避免多token申请
 	token := config.RDB.Get(username)
 	if token.Val() != "" {
-		c.JSON(200, gin.H{"fail": "have get a token , Can not get more token"})
+		c.JSON(200, gin.H{"flag": "fail", "detail": "have get a token , Can not get more token", "token": "NULL"})
 		return
 	}
 	id, _ := uuid.NewRandom()
@@ -64,6 +64,6 @@ func Login(c *gin.Context) {
 		slog.Info(fmt.Sprintf("login success, username: %s, role: %s", username, role))
 	}
 	// 返回token
-	c.JSON(200, gin.H{"success": "have get token", "token": hashStringToken})
+	c.JSON(200, gin.H{"flag": "success", "detail": "have get token", "token": hashStringToken})
 	return
 }

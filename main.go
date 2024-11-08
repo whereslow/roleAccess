@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 )
+import _ "ValidStudio/docs"
 
 func main() {
 	var err error

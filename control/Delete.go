@@ -17,21 +17,21 @@ func Delete(c *gin.Context) {
 	}
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.JSON(200, gin.H{"fail": "request is not standardized"})
+		c.JSON(200, gin.H{"flag": "fail", "detail": "request is not standardized"})
 	}
 	token := req.Token
 	username := req.DeleteUsername
 	isAdmin := validate.Valid(token, "admin")
 	if !isAdmin {
 		// token非管理员
-		c.JSON(200, gin.H{"fail": "you are not admin"})
+		c.JSON(200, gin.H{"flag": "fail", "detail": "you are not admin"})
 		return
 	} else {
 		flag := DAO.DeleteUser(username, config.DB)
 		if flag {
-			c.JSON(200, gin.H{"success": "user deleted"})
+			c.JSON(200, gin.H{"flag": "success", "detail": "user deleted"})
 		} else {
-			c.JSON(200, gin.H{"fail": "user does not exist"})
+			c.JSON(200, gin.H{"flag": "fail", "detail": "user does not exist"})
 		}
 	}
 }

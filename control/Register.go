@@ -19,7 +19,7 @@ func Register(c *gin.Context) {
 	}
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.JSON(200, gin.H{"fail": "request is not standardized"})
+		c.JSON(200, gin.H{"flag": "fail", "detail": "request is not standardized"})
 	}
 	token := req.Token
 	newUsername := req.NewUsername
@@ -27,15 +27,15 @@ func Register(c *gin.Context) {
 	newRole := req.NewRole
 	isAdmin := validate.Valid(token, "admin")
 	if !isAdmin {
-		c.JSON(200, gin.H{"fail": "you are not admin"})
+		c.JSON(200, gin.H{"flag": "fail", "detail": "you are not admin"})
 		return
 	} else {
 		flag := DAO.CreateUser(newUsername, newPassword, newRole, config.DB)
 		if !flag {
-			c.JSON(200, gin.H{"fail": "User has been Created"})
+			c.JSON(200, gin.H{"flag": "fail", "detail": "User has been Created"})
 			return
 		}
-		c.JSON(200, gin.H{"success": "User created"})
+		c.JSON(200, gin.H{"flag": "success", "detail": "User created"})
 		return
 	}
 }
