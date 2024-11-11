@@ -12,8 +12,6 @@ func TestInitRedis(t *testing.T) {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	err = config.InitRedis()
-	if err != nil {
-		log.Fatal(err)
-	}
+	config.InitRedis()
+
 }

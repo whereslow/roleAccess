@@ -12,8 +12,6 @@ func TestInitMysql(t *testing.T) {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	err = config.InitMysql()
-	if err != nil {
-		log.Fatal(err)
-	}
+	config.InitMysql()
+
 }
