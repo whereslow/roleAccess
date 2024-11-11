@@ -6,4 +6,3 @@
 *.iml
 .idea
 artifact/
-docker/

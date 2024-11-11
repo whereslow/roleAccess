@@ -1,0 +1,12 @@
+FROM golang:alpine AS builder
+
+RUN apk update && apk add --no-cache git
+RUN git clone -b keep https://github.com/whereslow/roleAccess.git /app/roleAccess
+WORKDIR /app/roleAccess
+RUN go build -o /app/main .
+
+FROM alpine:latest
+COPY --from=builder /app/main /app/main
+RUN chmod +x /app/main
+EXPOSE 8000
+ENTRYPOINT ["/app/main","deploy"]
