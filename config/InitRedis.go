@@ -10,7 +10,7 @@ import (
 var RDB *redis2.Client
 
 // InitRedis 创建成功无返回,创建失败返回Redis ping的err
-func InitRedis() error {
+func InitRedis() {
 	dbNum, _ := strconv.Atoi(os.Getenv("redis_db"))
 	poolSize, _ := strconv.Atoi(os.Getenv("redis_pool_size"))
 	RDB = redis2.NewClient(&redis2.Options{
@@ -19,11 +19,4 @@ func InitRedis() error {
 		DB:       dbNum,
 		PoolSize: poolSize,
 	})
-
-	ping := RDB.Ping()
-	if ping.Err() != nil {
-		return ping.Err()
-	} else {
-		return nil
-	}
 }
