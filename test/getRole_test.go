@@ -13,10 +13,8 @@ func TestGetRole(t *testing.T) {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	err = config.InitMysql()
-	if err != nil {
-		log.Fatal(err)
-	}
+	config.InitMysql()
+
 	_, _, err = DAO.AccessRole("lry", "www", config.DB)
 	if err != nil {
 		log.Fatal(err)

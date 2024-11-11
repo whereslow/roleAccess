@@ -27,14 +27,8 @@ func main() {
 			gin.SetMode(gin.ReleaseMode)
 		}
 	}
-	err = config.InitMysql()
-	if err != nil {
-		log.Fatal("Mysql连接失败")
-	}
-	err = config.InitRedis()
-	if err != nil {
-		log.Fatal("Redis连接失败")
-	}
+	config.InitMysql()
+	config.InitRedis()
 
 	// 插入初始admin
 	DAO.CreateUser("whereslow", "whereslow", "admin", config.DB)

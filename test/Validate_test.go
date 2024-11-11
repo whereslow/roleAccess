@@ -13,10 +13,7 @@ func TestValidateAdmin(t *testing.T) {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	err = config.InitRedis()
-	if err != nil {
-		panic(err)
-	}
+	config.InitRedis()
 	token := config.RDB.Get("lry").Val()
 	flag := validate.Valid(token, "admin")
 	if !flag {

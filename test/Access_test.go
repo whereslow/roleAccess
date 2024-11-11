@@ -21,14 +21,9 @@ func TestLogin(t *testing.T) {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	err = config.InitMysql()
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = config.InitRedis()
-	if err != nil {
-		log.Fatal(err)
-	}
+	config.InitMysql()
+	config.InitRedis()
+
 	username := "lry"
 	password := "www"
 	role, finish, err := DAO.AccessRole(username, password, config.DB)
@@ -68,14 +63,10 @@ func TestLoginOut(t *testing.T) {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	err = config.InitMysql()
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = config.InitRedis()
-	if err != nil {
-		log.Fatal(err)
-	}
+	config.InitMysql()
+
+	config.InitRedis()
+
 	username := "lry"
 	password := "www"
 	_, finish, err := DAO.AccessRole(username, password, config.DB)
