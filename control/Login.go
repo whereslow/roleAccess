@@ -43,7 +43,7 @@ func Login(c *gin.Context) {
 	hashId := sha256.Sum256([]byte(id.String()))
 	hashStringToken := base64.URLEncoding.EncodeToString(hashId[:])
 	// redis存值
-	t := time.Duration(2*3600000000000 + rand.IntN(10)*3600000000000) // 2-10小时
+	t := time.Duration(2*3600000000000 + rand.IntN(1000)*36000000000) // 2-10小时
 	_, err = config.RDB.Set(username, hashStringToken, t).Result()    // 登录表,防止用户换取多token
 	if err != nil {
 		slog.Error(err.Error())
