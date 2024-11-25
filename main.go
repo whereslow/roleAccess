@@ -4,6 +4,7 @@ import (
 	"ValidStudio/DAO"
 	"ValidStudio/config"
 	"ValidStudio/control"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"log"
@@ -40,6 +41,8 @@ func main() {
 	DAO.CreateUser("whereslow", "whereslow", "admin", config.DB)
 	// ~
 	r := gin.Default()
+	// 跨域中间件
+	r.Use(cors.Default())
 	sso := r.Group("/sso")
 	{
 		sso.POST("/register", control.Register)
