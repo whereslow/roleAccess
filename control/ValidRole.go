@@ -10,8 +10,9 @@ func ValidRole(c *gin.Context) {
 
 	// request json解析及其参数绑定
 	var req struct {
-		Role  string `json:"role"`
-		Token string `json:"token"`
+		Username string `json:"username"`
+		Role     string `json:"role"`
+		Token    string `json:"token"`
 	}
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -20,7 +21,8 @@ func ValidRole(c *gin.Context) {
 	var flag = false
 	role := req.Role
 	token := req.Token
-	flag = validate.Valid(token, role)
+	username := req.Username
+	flag = validate.Valid(username, token, role)
 
 	c.JSON(200, gin.H{"flag": "success", "detail": "valid role success", "auth": flag})
 	return

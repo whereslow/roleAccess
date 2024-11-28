@@ -3,10 +3,11 @@ package validate
 import "ValidStudio/config"
 
 // Valid 验证token对应的身份
-func Valid(token string, toValidRole string) bool {
+func Valid(username string, token string, toValidRole string) bool {
 	role := config.RDB.Get(token).Val()
+	utoken := config.RDB.Get(username).Val()
 	if role == "" {
 		return false
 	}
-	return role == toValidRole
+	return role == toValidRole && utoken == token
 }
