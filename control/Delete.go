@@ -21,7 +21,7 @@ func Delete(c *gin.Context) {
 	}
 	token := req.Token
 	username := req.DeleteUsername
-	isAdmin := validate.Valid(token, "admin")
+	isAdmin := validate.Valid(username, token, "admin")
 	if !isAdmin {
 		// token非管理员
 		c.JSON(200, gin.H{"flag": "fail", "detail": "you are not admin"})

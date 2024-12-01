@@ -13,6 +13,7 @@ func Register(c *gin.Context) {
 	// request json解析及其参数绑定
 	var req struct {
 		Token       string `json:"token"`
+		Username    string `json:"username"`
 		NewUsername string `json:"new_username"`
 		NewPassword string `json:"new_password"`
 		NewRole     string `json:"new_role"`
@@ -25,7 +26,8 @@ func Register(c *gin.Context) {
 	newUsername := req.NewUsername
 	newPassword := req.NewPassword
 	newRole := req.NewRole
-	isAdmin := validate.Valid(token, "admin")
+	username := req.Username
+	isAdmin := validate.Valid(username, token, "admin")
 	if !isAdmin {
 		c.JSON(200, gin.H{"flag": "fail", "detail": "you are not admin"})
 		return
