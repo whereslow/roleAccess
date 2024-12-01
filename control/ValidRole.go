@@ -17,6 +17,7 @@ func ValidRole(c *gin.Context) {
 	err := c.BindJSON(&req)
 	if err != nil {
 		c.JSON(200, gin.H{"flag": "fail", "detail": "request is not standardized", "auth": "NULL"})
+		return
 	}
 	var flag = false
 	role := req.Role

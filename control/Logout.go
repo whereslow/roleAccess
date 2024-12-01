@@ -17,6 +17,7 @@ func LogOut(c *gin.Context) {
 	err := c.BindJSON(&req)
 	if err != nil {
 		c.JSON(200, gin.H{"flag": "fail", "detail": "request is not standardized"})
+		return
 	}
 	username := req.Username
 	password := req.Password

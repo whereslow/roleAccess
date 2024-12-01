@@ -4,7 +4,7 @@ import (
 	"ValidStudio/DAO"
 	"ValidStudio/config"
 	"crypto/sha256"
-	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -41,7 +41,7 @@ func Login(c *gin.Context) {
 	}
 	id, _ := uuid.NewRandom()
 	hashId := sha256.Sum256([]byte(id.String()))
-	hashStringToken := base64.URLEncoding.EncodeToString(hashId[:])
+	hashStringToken := hex.EncodeToString(hashId[:])
 	// redis存值
 	t := time.Duration(2*3600000000000 + rand.IntN(1000)*36000000000) // 2-10小时
 	_, err = config.RDB.Set(username, hashStringToken, t).Result()    // 登录表,防止用户换取多token

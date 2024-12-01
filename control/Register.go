@@ -5,6 +5,7 @@ import (
 	"ValidStudio/config"
 	"ValidStudio/validate"
 	"github.com/gin-gonic/gin"
+	"log/slog"
 )
 
 // Register 通过账号和密码,验证admin权限,有权限则创建对应身份的账户,储存在mysql
@@ -20,7 +21,9 @@ func Register(c *gin.Context) {
 	}
 	err := c.BindJSON(&req)
 	if err != nil {
+		slog.Error("", err.Error())
 		c.JSON(200, gin.H{"flag": "fail", "detail": "request is not standardized"})
+		return
 	}
 	token := req.Token
 	newUsername := req.NewUsername

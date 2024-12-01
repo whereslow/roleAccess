@@ -18,6 +18,7 @@ func Delete(c *gin.Context) {
 	err := c.BindJSON(&req)
 	if err != nil {
 		c.JSON(200, gin.H{"flag": "fail", "detail": "request is not standardized"})
+		return
 	}
 	token := req.Token
 	username := req.DeleteUsername
@@ -30,8 +31,10 @@ func Delete(c *gin.Context) {
 		flag := DAO.DeleteUser(username, config.DB)
 		if flag {
 			c.JSON(200, gin.H{"flag": "success", "detail": "user deleted"})
+			return
 		} else {
 			c.JSON(200, gin.H{"flag": "fail", "detail": "user does not exist"})
+			return
 		}
 	}
 }
