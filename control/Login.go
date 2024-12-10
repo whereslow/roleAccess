@@ -23,6 +23,13 @@ func Login(c *gin.Context) {
 		c.JSON(200, gin.H{"flag": "fail", "detail": "username or password is empty", "token": "NULL"})
 		return
 	}
+	// RDB 设置ip : 账户
+	ip := c.ClientIP()
+	if config.RDB.Get(ip).Val() == username {
+		c.JSON(200, gin.H{"flag": "fail", "detail": "login to fast", "token": "NULL"})
+		return
+	}
+	config.RDB.Set(ip, username, 3*time.Second)
 	// mysql 取值
 	role, finish, err := DAO.AccessRole(username, password, config.DB)
 	if err != nil {
