@@ -31,8 +31,8 @@ func Login(c *gin.Context) {
 		return
 	}
 	// ip 时间尝试限制
-	ipCount, err := global.RDB.Get(fmt.Sprintf("%s_count", ip)).Int()
-	if err != nil {
+	ipCount, err := global.RDB.Get(fmt.Sprintf("count_%s", ip)).Int()
+	if err != nil && err.Error() != "nil" {
 		slog.Error(err.Error())
 	}
 	if ipCount > 1000 {
@@ -43,22 +43,22 @@ func Login(c *gin.Context) {
 	// mysql 取值
 	role, finish, err := DAO.AccessRole(username, password, global.DB)
 	if err != nil {
-		global.RDB.Incr(fmt.Sprintf("%s_count", ip))
-		global.RDB.Expire(ip, 12*time.Second)
+		global.RDB.Incr(fmt.Sprintf("count_%s", ip))
+		global.RDB.Expire(fmt.Sprintf("count_%s", ip), 10*time.Minute)
 		c.JSON(200, gin.H{"flag": "fail", "detail": "internal server error", "token": "NULL"})
 		return
 	}
 	if !finish {
-		global.RDB.Incr(fmt.Sprintf("%s_count", ip))
-		global.RDB.Expire(ip, 12*time.Second)
+		global.RDB.Incr(fmt.Sprintf("count_%s", ip))
+		global.RDB.Expire(fmt.Sprintf("count_%s", ip), 10*time.Minute)
 		c.JSON(200, gin.H{"flag": "fail", "detail": "username or password error", "token": "NULL"})
 		return
 	}
 	// redis取值,验证是否登录,避免多token申请
 	token := global.RDB.Get(username)
 	if token.Val() != "" {
-		global.RDB.Incr(fmt.Sprintf("%s_count", ip))
-		global.RDB.Expire(ip, 12*time.Second)
+		global.RDB.Incr(fmt.Sprintf("count_%s", ip))
+		global.RDB.Expire(fmt.Sprintf("count_%s", ip), 10*time.Minute)
 		c.JSON(200, gin.H{"flag": "fail", "detail": "have get a token , Can not get more token", "token": "NULL"})
 		return
 	}
