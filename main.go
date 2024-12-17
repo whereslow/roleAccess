@@ -38,9 +38,6 @@ func main() {
 		log.Fatal("Redis连接失败")
 	}
 
-	// 初始化缓存
-	config.InitCache()
-
 	// 插入初始admin, 如果存在用户则不会创建
 	DAO.CreateUser("whereslow", "whereslow", "admin", global.DB)
 	// ~
