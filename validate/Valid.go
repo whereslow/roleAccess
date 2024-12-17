@@ -1,9 +1,7 @@
 package validate
 
 import (
-	"ValidStudio/global"
 	redis2 "github.com/go-redis/redis"
-	"github.com/patrickmn/go-cache"
 	"strings"
 )
 
@@ -13,21 +11,8 @@ func Valid(username string, token string, toValidRole string, rdb *redis2.Client
 	var role string
 	var userToken string
 
-	// 一级缓存和二级缓存
-	tokenLocal, found := global.Cache.Get(token)
-	if found {
-		role = tokenLocal.(string)
-	} else {
-		role = rdb.Get(token).Val()
-		global.Cache.Set(token, role, cache.DefaultExpiration)
-	}
-	userTokenLocal, found := global.Cache.Get(username)
-	if found {
-		userToken = userTokenLocal.(string)
-	} else {
-		userToken = rdb.Get(username).Val()
-		global.Cache.Set(username, userToken, cache.DefaultExpiration)
-	}
+	role = rdb.Get(token).Val()
+	userToken = rdb.Get(username).Val()
 
 	if role == "" {
 		return false
