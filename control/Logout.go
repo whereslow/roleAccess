@@ -2,8 +2,10 @@ package control
 
 import (
 	"ValidStudio/DAO"
-	"ValidStudio/config"
+	"ValidStudio/global"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"log/slog"
 )
 
 // LogOut 验证账号密码,退出登录,销毁token
@@ -21,7 +23,7 @@ func LogOut(c *gin.Context) {
 	}
 	username := req.Username
 	password := req.Password
-	_, finish, err := DAO.AccessRole(username, password, config.DB)
+	role, finish, err := DAO.AccessRole(username, password, global.DB)
 	if err != nil {
 		c.JSON(200, gin.H{"flag": "fail", "detail": "internal server error"})
 		return
@@ -30,15 +32,16 @@ func LogOut(c *gin.Context) {
 		c.JSON(200, gin.H{"flag": "fail", "detail": "username or password error"})
 		return
 	}
-	token := config.RDB.Get(username).Val()
+	token := global.RDB.Get(username).Val()
 	if token == "" {
 		c.JSON(200, gin.H{"flag": "fail", "detail": "not login"})
 		return
 	} else {
 		// redis删除登录凭证
-		token := config.RDB.Get(username).Val()
-		config.RDB.Del(username)
-		config.RDB.Del(token)
+		token := global.RDB.Get(username).Val()
+		global.RDB.Del(username)
+		global.RDB.Del(token)
+		slog.Info(fmt.Sprintf("logout success, username: %s, role: %s", username, role))
 		c.JSON(200, gin.H{"flag": "success", "detail": "log out"})
 		return
 	}

@@ -2,7 +2,7 @@ package control
 
 import (
 	"ValidStudio/DAO"
-	"ValidStudio/config"
+	"ValidStudio/global"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -25,13 +25,13 @@ func Login(c *gin.Context) {
 	}
 	// RDB 设置ip : 账户
 	ip := c.ClientIP()
-	if config.RDB.Get(ip).Val() == username {
+	if global.RDB.Get(ip).Val() == username {
 		c.JSON(200, gin.H{"flag": "fail", "detail": "login to fast", "token": "NULL"})
 		return
 	}
-	config.RDB.Set(ip, username, 3*time.Second)
+	global.RDB.Set(ip, username, 3*time.Second)
 	// mysql 取值
-	role, finish, err := DAO.AccessRole(username, password, config.DB)
+	role, finish, err := DAO.AccessRole(username, password, global.DB)
 	if err != nil {
 		c.JSON(200, gin.H{"flag": "fail", "detail": "internal server error", "token": "NULL"})
 		return
@@ -41,7 +41,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	// redis取值,验证是否登录,避免多token申请
-	token := config.RDB.Get(username)
+	token := global.RDB.Get(username)
 	if token.Val() != "" {
 		c.JSON(200, gin.H{"flag": "fail", "detail": "have get a token , Can not get more token", "token": "NULL"})
 		return
@@ -51,11 +51,11 @@ func Login(c *gin.Context) {
 	hashStringToken := hex.EncodeToString(hashId[:])
 	// redis存值
 	t := time.Duration(2*3600000000000 + rand.IntN(1000)*36000000000) // 2-10小时
-	_, err = config.RDB.Set(username, hashStringToken, t).Result()    // 登录表,防止用户换取多token
+	_, err = global.RDB.Set(username, hashStringToken, t).Result()    // 登录表,防止用户换取多token
 	if err != nil {
 		slog.Error(err.Error())
 	}
-	result, err := config.RDB.Set(hashStringToken, role, t).Result()
+	result, err := global.RDB.Set(hashStringToken, role, t).Result()
 	if err != nil {
 		slog.Error(err.Error())
 	}

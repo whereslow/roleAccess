@@ -4,6 +4,7 @@ import (
 	"ValidStudio/DAO"
 	"ValidStudio/config"
 	"ValidStudio/control"
+	"ValidStudio/global"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -37,8 +38,11 @@ func main() {
 		log.Fatal("Redis连接失败")
 	}
 
-	// 插入初始admin
-	DAO.CreateUser("whereslow", "whereslow", "admin", config.DB)
+	// 初始化缓存
+	config.InitCache()
+
+	// 插入初始admin, 如果存在用户则不会创建
+	DAO.CreateUser("whereslow", "whereslow", "admin", global.DB)
 	// ~
 	r := gin.Default()
 	// 跨域中间件

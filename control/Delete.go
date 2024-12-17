@@ -2,9 +2,11 @@ package control
 
 import (
 	"ValidStudio/DAO"
-	"ValidStudio/config"
+	"ValidStudio/global"
 	"ValidStudio/validate"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"log/slog"
 )
 
 // Delete 通过admin权限的token删除指定用户名的账户
@@ -14,6 +16,7 @@ func Delete(c *gin.Context) {
 	var req struct {
 		Token          string `json:"token"`
 		DeleteUsername string `json:"delete_username"`
+		OPUsername     string `json:"op_username"`
 	}
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -22,14 +25,16 @@ func Delete(c *gin.Context) {
 	}
 	token := req.Token
 	username := req.DeleteUsername
-	isAdmin := validate.Valid(username, token, "admin")
+	OPUser := req.OPUsername
+	isAdmin := validate.Valid(OPUser, token, "admin", global.RDB)
 	if !isAdmin {
 		// token非管理员
 		c.JSON(200, gin.H{"flag": "fail", "detail": "you are not admin"})
 		return
 	} else {
-		flag := DAO.DeleteUser(username, config.DB)
+		flag := DAO.DeleteUser(username, global.DB)
 		if flag {
+			slog.Info(fmt.Sprintf(" deleted success deleted user : %s, by admin user: %s", username, OPUser))
 			c.JSON(200, gin.H{"flag": "success", "detail": "user deleted"})
 			return
 		} else {

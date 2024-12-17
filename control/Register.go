@@ -2,7 +2,7 @@ package control
 
 import (
 	"ValidStudio/DAO"
-	"ValidStudio/config"
+	"ValidStudio/global"
 	"ValidStudio/validate"
 	"github.com/gin-gonic/gin"
 	"log/slog"
@@ -30,12 +30,12 @@ func Register(c *gin.Context) {
 	newPassword := req.NewPassword
 	newRole := req.NewRole
 	username := req.Username
-	isAdmin := validate.Valid(username, token, "admin")
+	isAdmin := validate.Valid(username, token, "admin", global.RDB)
 	if !isAdmin {
 		c.JSON(200, gin.H{"flag": "fail", "detail": "you are not admin"})
 		return
 	} else {
-		flag := DAO.CreateUser(newUsername, newPassword, newRole, config.DB)
+		flag := DAO.CreateUser(newUsername, newPassword, newRole, global.DB)
 		if !flag {
 			c.JSON(200, gin.H{"flag": "fail", "detail": "User has been Created"})
 			return
