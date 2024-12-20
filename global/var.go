@@ -1,10 +1,16 @@
 package global
 
 import (
-	redis2 "github.com/go-redis/redis"
+	"context"
 	"github.com/jmoiron/sqlx"
+	"github.com/patrickmn/go-cache"
+	"github.com/redis/go-redis/v9"
 )
 
 var DB *sqlx.DB
 
-var RDB *redis2.Client
+var RDB *redis.Client
+
+var Cache *cache.Cache
+
+var Background = context.Background()

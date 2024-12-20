@@ -1,19 +1,24 @@
 package validate
 
 import (
-	redis2 "github.com/go-redis/redis"
+	"ValidStudio/global"
 	"strings"
 )
 
 // Valid 验证token对应的身份
-func Valid(username string, token string, toValidRole string, rdb *redis2.Client) bool {
+func Valid(username string, token string, toValidRole string) bool {
 	roleList := strings.Split(toValidRole, "|")
 	var role string
 	var userToken string
 
-	role = rdb.Get(token).Val()
-	userToken = rdb.Get(username).Val()
-
+	localRole, foundLocalRole := global.Cache.Get(token)
+	if foundLocalRole {
+		role = localRole.(string)
+	}
+	localUserToken, foundLocalUserToken := global.Cache.Get(username)
+	if foundLocalUserToken {
+		userToken = localUserToken.(string)
+	}
 	if role == "" {
 		return false
 	}
@@ -21,7 +26,10 @@ func Valid(username string, token string, toValidRole string, rdb *redis2.Client
 		return false
 	}
 	for _, r := range roleList {
-		// 任意符合
+		// | 分隔的任意符合, -${role} 表示不接受该角色
+		if r[0] == '-' && role == r[1:] {
+			return false
+		}
 		if role == r {
 			return true
 		}

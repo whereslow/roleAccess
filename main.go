@@ -3,6 +3,7 @@ package main
 import (
 	"ValidStudio/DAO"
 	"ValidStudio/config"
+	"ValidStudio/consumer"
 	"ValidStudio/control"
 	"ValidStudio/global"
 	"github.com/gin-contrib/cors"
@@ -37,13 +38,15 @@ func main() {
 	if err != nil {
 		log.Fatal("Redis连接失败")
 	}
-
+	config.InitCache()
 	// 插入初始admin, 如果存在用户则不会创建
 	DAO.CreateUser("whereslow", "whereslow", "admin", global.DB)
 	// ~
 	r := gin.Default()
 	// 跨域中间件
 	r.Use(cors.Default())
+	go consumer.LoginReceive()
+	go consumer.LogoutReceive()
 	sso := r.Group("/sso")
 	{
 		sso.POST("/register", control.Register)

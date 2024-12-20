@@ -1,7 +1,6 @@
 package control
 
 import (
-	"ValidStudio/global"
 	"ValidStudio/validate"
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +23,7 @@ func ValidRole(c *gin.Context) {
 	role := req.Role
 	token := req.Token
 	username := req.Username
-	flag = validate.Valid(username, token, role, global.RDB)
+	flag = validate.Valid(username, token, role)
 	c.JSON(200, gin.H{"flag": "success", "detail": "valid role success", "auth": flag})
 	return
 }
